@@ -9,6 +9,7 @@ x<-read.FCS("/projects/AML/data/AML/AML 1/AML 1 De Novo Panel_Tube_001.fcs", tra
 
 flowFramePlus <- R6Class("flowFramePlus",
                          public = list(
+                           ffOrig = NULL,
                            ff = NULL,
                            normlist = NULL,
                            norm_fac = NULL,
@@ -24,7 +25,7 @@ flowFramePlus <- R6Class("flowFramePlus",
                              }
                              lapply(names(normlist),function(name){self$ff<<-doTransform(ff,cols=normlist[[name]],method=name)})
                              #self$flowFrame <- doTransform(flowFrame,cols=norm_cols,method=norm_method, fac=norm_fac)
-                             self$plot()
+                             
                              self$plist_default = c("FSC-H","SSC-H")
                            },
                            chooseTransforms = function(plist){
