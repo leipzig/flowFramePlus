@@ -9,26 +9,26 @@ x<-read.FCS("/projects/AML/data/AML/AML 1/AML 1 De Novo Panel_Tube_001.fcs", tra
 
 #hyperbolic arcsin (implemented in flowcore), boxcox, logical transforms
 #c("biexp", "log", "linear")
-#flowFramePlus$new(x,normlist=list("linear"=c(1:4),"biexp"=c(5:12)))
+#flowFramePlus$new(x,transformlist=list("linear"=c(1:4),"biexp"=c(5:12)))
 
 #' flowFramePlus
 #'
-#' flowFramePlus holds normalization and scale attributes. It is essentially a small
+#' flowFramePlus holds transformalization and scale attributes. It is essentially a small
 #' wrapper around the \code{flowFrame} with some logical defaults.
 #'
 #' @section Usage:
-#' \preformatted{p <- flowFramePlus$new(normlist = NA, plist = c("FSC-H","SSC-H"))}
+#' \preformatted{p <- flowFramePlus$new(transformlist = NA, plist = c("FSC-H","SSC-H"))}
 #' \preformatted{p <- flowFramePlus$plot()}
 flowFramePlus <- R6Class("flowFramePlus",
                          public = list(
                            ffOrig = NULL,
                            ff = NULL,
                            ffFile = NULL,
-                           normlist = NULL,
-                           norm_fac = NULL,
+                           transformlist = NULL,
+                           transform_fac = NULL,
                            plist = NULL,
                            plotScales = NULL,
-                           initialize = function(ff = NA, normlist = NA, plist = c("FSC-H","SSC-H")) {
+                           initialize = function(ff = NA, transformlist = NA, plist = c("FSC-H","SSC-H")) {
                              if(class(ff)=='flowFrame'){
                                self$ffOrig <-ff
                              }else{
@@ -44,35 +44,32 @@ flowFramePlus <- R6Class("flowFramePlus",
                              #the columns to plot
                              self$plist <- plist
                              
-                             if(is.na(normlist)){
-                               #apply normalization to conventions on scatter and fluorescence columns
+                             if(is.na(transformlist)){
+                               #apply transformalization to conventions on scatter and fluorescence columns
                                #scatter signals are kept linear
                                #flourescence log-ish apply biexp
                                scatterCols<-which(grepl("FSC|SSC",colnames(self$ff)))
                                fluorCols<-which(!(grepl("Time",colnames(self$ff)) | grepl("FSC|SSC",colnames(self$ff))))
-                               normlist<-list("linear"=scatterCols,"biexp"=fluorCols)
+                               transformlist<-list("linear"=scatterCols,"biexp"=fluorCols)
                                #there should be no overlap
-                               assertthat::are_equal(length(Reduce(intersect,normlist)),0)
+                               assertthat::are_equal(length(Reduce(intersect,transformlist)),0)
                              }
-                             lapply(names(normlist),function(name){
+                             lapply(names(transformlist),function(name){
                                #actually transform the data
-                               self$ff<<-doTransform(self$ff,cols=normlist[[name]],method=name)
+                               self$ff<<-doTransform(self$ff,cols=transformlist[[name]],method=name)
                              })
-                             #the normalizations to apply
-                             self$normlist<-normlist
+                             #the transformalizations to apply
+                             self$transformlist<-transformlist
                              
                              #find the index of the columns to plot
                              plotCols<-sapply(plist,function(x){which(grepl(x,colnames(self$ff)))})
                              #find the scale of the columns to plot based on their transformations e.g. 1:linear 2:biexp
                              #we also lookup the name of the scale here
-                             plotScales<-sapply(qdapTools::lookup(plotCols,normlist),self$lookupPlotScaleByNormScale)
+                             plotScales<-sapply(qdapTools::lookup(plotCols,transformlist),self$lookupPlotScaleBytransformScale)
                              names(plotScales)<-c("x","y")
                              self$plotScales<-as.list(plotScales)
                            },
-                           chooseTransforms = function(plist){
-                             sapply(plist,function(x){ifelse(grepl("FSC|SSC",x),"linear","biexp")})
-                           },
-                           lookupPlotScaleByNormScale = function(ns){
+                           lookupPlotScaleBytransformScale = function(ns){
                              #if there is some lookup that needs to occur it should be here
                              #right now let's map by identity
                              return(ns)
