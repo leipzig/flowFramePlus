@@ -11,17 +11,36 @@ x<-read.FCS("/projects/AML/data/AML/AML 1/AML 1 De Novo Panel_Tube_001.fcs", tra
 #c("biexp", "log", "linear")
 #flowFramePlus$new(x,normlist=list("linear"=c(1:4),"biexp"=c(5:12)))
 
+#' flowFramePlus
+#'
+#' flowFramePlus holds normalization and scale attributes. It is essentially a small
+#' wrapper around the \code{flowFrame} with some logical defaults.
+#'
+#' @section Usage:
+#' \preformatted{p <- flowFramePlus$new(normlist = NA, plist = c("FSC-H","SSC-H"))}
+#' \preformatted{p <- flowFramePlus$plot()}
 flowFramePlus <- R6Class("flowFramePlus",
                          public = list(
                            ffOrig = NULL,
                            ff = NULL,
+                           ffFile = NULL,
                            normlist = NULL,
                            norm_fac = NULL,
                            plist = NULL,
                            plotScales = NULL,
                            initialize = function(ff = NA, normlist = NA, plist = c("FSC-H","SSC-H")) {
-                             self$ffOrig <- ff
-                             
+                             if(class(ff)=='flowFrame'){
+                               self$ffOrig <-ff
+                             }else{
+                               if(file.exists(ff)){
+                                 self$ffFile<-ff
+                                 self$ffOrig <-read.FCS(ff, transformation = FALSE)
+                               }else{
+                                 stop("flowFramePlus requires either a flowFrame object or a filename")
+                               }
+                             }
+                             self$ff<-self$ffOrig
+                             assertthat::assert_that(class(self$ff)=='flowFrame')
                              #the columns to plot
                              self$plist <- plist
                              
@@ -29,29 +48,26 @@ flowFramePlus <- R6Class("flowFramePlus",
                                #apply normalization to conventions on scatter and fluorescence columns
                                #scatter signals are kept linear
                                #flourescence log-ish apply biexp
-                               scatterCols<-which(grepl("FSC|SSC",colnames(ff)))
-                               fluorCols<-which(!(grepl("Time",colnames(ff)) | grepl("FSC|SSC",colnames(ff))))
+                               scatterCols<-which(grepl("FSC|SSC",colnames(self$ff)))
+                               fluorCols<-which(!(grepl("Time",colnames(self$ff)) | grepl("FSC|SSC",colnames(self$ff))))
                                normlist<-list("linear"=scatterCols,"biexp"=fluorCols)
                                #there should be no overlap
                                assertthat::are_equal(length(Reduce(intersect,normlist)),0)
                              }
                              lapply(names(normlist),function(name){
                                #actually transform the data
-                               self$ff<<-doTransform(ff,cols=normlist[[name]],method=name)
+                               self$ff<<-doTransform(self$ff,cols=normlist[[name]],method=name)
                              })
                              #the normalizations to apply
                              self$normlist<-normlist
                              
-                             
                              #find the index of the columns to plot
-                             plotCols<-sapply(plist,function(x){which(grepl(x,colnames(ff)))})
+                             plotCols<-sapply(plist,function(x){which(grepl(x,colnames(self$ff)))})
                              #find the scale of the columns to plot based on their transformations e.g. 1:linear 2:biexp
                              #we also lookup the name of the scale here
                              plotScales<-sapply(qdapTools::lookup(plotCols,normlist),self$lookupPlotScaleByNormScale)
                              names(plotScales)<-c("x","y")
                              self$plotScales<-as.list(plotScales)
-                             
-
                            },
                            chooseTransforms = function(plist){
                              sapply(plist,function(x){ifelse(grepl("FSC|SSC",x),"linear","biexp")})
