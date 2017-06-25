@@ -1,12 +1,12 @@
 library(R6)
 library(flowViz)
-source ("~/git/R/tools/sourceTools.R")
+library(flowCore)
 
 
 #ffs<-flowFramePlus$new("/projects/AML/data/AML/AML 1/AML 1 De Novo Panel_Tube_001.fcs")
-#hyperbolic arcsin (implemented in flowcore), boxcox, logical transforms
+#hyperbolic arcsin (implemented in flowCore), boxcox, logical transforms
 #c("biexp", "log", "linear")
-#flowFramePlus$new(x,transformlist=list("linear"=c(1:4),"biexp"=c(5:12)))
+#flowFramePlus$new(x,txlist=list("linear"=c(1:4),"biexp"=c(5:12)))
 
 #' flowFramePlus
 #'
@@ -19,24 +19,23 @@ source ("~/git/R/tools/sourceTools.R")
 #'
 #' @section Arguments:
 #' \describe{
-#'   \item{p}{A \code{process} object.}
-#'   \item{command}{Character scalar, the command to run. It will be
-#'     escaped via \code{\link[base]{shQuote}}.}
+#'   \item{ff}{A \code{flowFrame} object or filepath of an FCS file.}
+#'   \item{txlist}{List, specify transformation to be used on each column index.
+#'   For example \code{txlist=list("linear"=c(1:4),"biexp"=c(5:12))}}
+#' }
 #'
 #' @section Details:
-#' \code{$new()} starts a new process, it uses \code{\link[base]{pipe}}.
-#' R does \emph{not} wait for the process to finish, but returns
-#' immediately.
+#' \code{$new()} starts a new flowFramePlus object, either from an existing flowFrame object or
+#' an FCS filepath
 #'
 #' You can specify which columns to transform using the following syntax:
-#' \preformatted{p <- flowFramePlus$new(x,transformlist=list("linear"=c(1:4),"biexp"=c(5:12)))}
+#' \preformatted{p <- flowFramePlus$new(x,txlist=list("linear"=c(1:4),"biexp"=c(5:12)))}
 #'
 #' @importFrom R6 R6Class
-#' @name process
+#' @name flowFramePlus
 #' @examples
-#' p <- process$new("sleep", "2")
-#' p$is_alive()
-#' p
+#' #ffp<-flowFramePlus$new("/projects/AML/data/AML/AML 1/AML 1 De Novo Panel_Tube_001.fcs")
+#' #ffp$plot()
 NULL
 
 #' @export
@@ -45,21 +44,17 @@ flowFramePlus <- R6Class("flowFramePlus",
                            ffOrig = NULL,
                            ffTxed = NULL,
                            ffFile = NULL,
-                           transformlist = NULL,
-                           transform_fac = NULL,
+                           txlist = NULL,
+                           txfac = NULL,
                            plist = NULL,
                            plotScales = NULL,
                            initialize = function(...)
-                             flowframeplus_initialize(self, private, ...),
+                             ffp_initialize(self, private, ...),
                            plot = function(...)
-                             flow_frame_basic_plot(self, private, ...)
-                         ),
-                         private = list(
-                           lookupPlotScaleBytransformScale = function(ns){
-                             #if there is some lookup that needs to occur it should be here
-                             #right now let's map by identity
-                             return(ns)
-                           }
+                             ffp_plot(self, private, ...),
+                           lookupPlotScale = function(...)
+                             ffp_lookupPlotScale(self, private, ...),
+                           doTransform = function(...)
+                             ffp_doTransform(self, private, ...)
                          )
 )
-
