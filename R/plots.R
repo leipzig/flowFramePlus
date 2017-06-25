@@ -1,6 +1,11 @@
 #' Plot a flowFramePlus use base R (pplot)
 #'
 #' @importFrom flowCore plot
+#' @importFrom fields xline yline
+#' @importFrom grDevices colorRampPalette hsv
+#' @importFrom graphics box
+#' @import flowViz
+
 #' @param self this
 #' @param private this$private
 #' @param plist Which columns to plot on the x and y axes, can override settings made at class instantiation

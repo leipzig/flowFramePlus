@@ -1,5 +1,6 @@
 #' Construct a flowFramePlus
-#'
+#' @importFrom stats rnorm
+#' @importFrom assertthat assert_that are_equal
 #' @param self this
 #' @param private this$private
 #' @param ff flowFrame object or FCS file path

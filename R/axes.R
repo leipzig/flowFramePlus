@@ -1,8 +1,5 @@
-######################################################
-# Generates axes used in pplot
-#
-#
-#######################################################
+#' Generates axes used in pplot
+#' @importFrom graphics box
 ax <- function (axis=1, instrument, type, ticksize = 2,...) {
 
   # instrument = match.arg(instrument)
