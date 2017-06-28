@@ -1,6 +1,6 @@
 Package: flowFramePlus
 Type: Package
-Title: Provenance wrappers for flowFrame
+Title: Provenance wrappers for flowFrame and flowSet
 Version: 0.1.0
 Author: Jeremy Leipzig
 Maintainer: <leipzig@cytovas.com>

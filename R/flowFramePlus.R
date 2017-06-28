@@ -59,11 +59,3 @@ flowFramePlus <- R6Class("flowFramePlus",
                          )
 )
 
-#' @export
-flowSetPlus <- R6Class("flowSetPlus",
-                         public = list(
-                           frames =  list(),
-                           initialize = function(...)
-                             fsp_initialize(self, private, ...),
-                         )
-)

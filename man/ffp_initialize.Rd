@@ -16,7 +16,7 @@ ffp_initialize(self, private, ff = NA, txlist = NA, plist = c("FSC-H",
 
 \item{txlist}{Which columns to transform and how}
 
-\item{plist}{Which columns to plot on the x and y axis}
+\item{plist}{Which columns to plot on the x and y axis by default (optional)}
 }
 \description{
 Construct a flowFramePlus

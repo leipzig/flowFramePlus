@@ -5,17 +5,21 @@
 #' @param private this$private
 #' @param ff flowFrame object or FCS file path
 #' @param txlist Which columns to transform and how
-#' @param plist Which columns to plot on the x and y axis
+#' @param plist Which columns to plot on the x and y axis by default (optional)
 #'
 #' @keywords internal
 #'
 ffp_initialize = function(self, private, ff = NA, txlist = NA, plist = c("FSC-H","SSC-H")) {
-  if(class(ff)=='flowFrame'){
+  if(is(ff,'flowFrame')){
     self$ffOrig <-ff
   }else{
-    if(file.exists(ff)){
-      self$ffFile<-ff
-      self$ffOrig <-flowCore::read.FCS(ff, transformation = FALSE)
+    if(is(ff,'character')){
+      if(file.exists(ff)){
+        self$ffFile<-ff
+        self$ffOrig <-flowCore::read.FCS(ff, transformation = FALSE)
+      }else{
+        stop(paste("can't find file",ff))
+      }
     }else{
       stop("flowFramePlus requires either a flowFrame object or a filename")
     }
@@ -52,3 +56,23 @@ ffp_initialize = function(self, private, ff = NA, txlist = NA, plist = c("FSC-H"
   self$plotScales<-as.list(plotScales)
 }
 
+#' Construct a flowSetPlus
+#' @importFrom stats rnorm
+#' @importFrom assertthat assert_that are_equal
+#' @param self this
+#' @param private this$private
+#' @param ff flowFrame object(s) or FCS file path(s)
+#' @param txlist Which columns to transform and how
+#' @param plist Which columns to plot on the x and y axis by default (optional)
+#'
+#' @keywords internal
+#'
+fsp_initialize = function(self, private, ffs = NA, txlist = NA, plist = c("FSC-H","SSC-H")) {
+
+  if(length(ffs)>1){
+    cat(length(ffs))
+    self$frames <- as.list(sapply(ffs,function(ff){flowFramePlus$new(ff,txlist,plist)}))
+  }else{
+    self$frames <- list(flowFramePlus$new(ff,txlist,plist))
+  }
+}
