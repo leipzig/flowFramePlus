@@ -12,6 +12,7 @@ Imports:
     flowCore,
     fields,
     flowViz,
-    qdapTools
+    qdapTools,
+    assertthat
 Suggests: testthat
 RoxygenNote: 6.0.1
