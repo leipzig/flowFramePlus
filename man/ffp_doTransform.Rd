@@ -2,29 +2,13 @@
 % Please edit documentation in R/transform.R
 \name{ffp_doTransform}
 \alias{ffp_doTransform}
-\title{This function performs biexponential transform on all parameters except SSC-W}
+\title{Static function to performs biexponential transform on all parameters except SSC-W
+This is verbatim what Wade was using originally}
 \usage{
-ffp_doTransform(self, private, f, cols = c(1:5, 7:13), method = c("biexp",
-  "log", "linear"), fac = 5.4/262143)
-}
-\arguments{
-\item{private}{this$private}
-
-\item{f}{flowFrame}
-
-\item{cols}{Scale to apply to x axis}
-
-\item{method}{transformation method}
-}
-\value{
-a transformed flowFrame
+ffp_doTransform(f, cols = c(1:5, 7:13), method = c("biexp", "log",
+  "linear"), fac = 5.4/262143)
 }
 \description{
-This function performs biexponential transform on all parameters except SSC-W
+Static function to performs biexponential transform on all parameters except SSC-W
+This is verbatim what Wade was using originally
 }
-\details{
-This function performs biexponential transform on all parameters except SSC-W
-
-Jitter is set to false for biexponential to get reproducible results (otherwise would result in random #)
-}
-\keyword{internal}

@@ -54,8 +54,8 @@ flowFramePlus <- R6Class("flowFramePlus",
                              ffp_plot(self, private, ...),
                            lookupPlotScale = function(...)
                              ffp_lookupPlotScale(self, private, ...),
-                           doTransform = function(...)
-                             ffp_doTransform(self, private, ...)
+                           transformCols = function(...)
+                             ffp_transformCols(self, private, ...)
                          )
 )
 

@@ -41,8 +41,8 @@ ffp_initialize = function(self, private, ff = NA, txlist = NA, plist = c("FSC-H"
     assertthat::are_equal(length(Reduce(intersect,txlist)),0)
   }
   for(name in names(txlist)){
-    #actually transform the data
-    self$ffTxed<-ffp_doTransform(f=self$ffTxed,cols=txlist[[name]],method=name)
+    #actually transform the data in self$ffTxed
+    self$transformCols(cols=txlist[[name]],method=name)
   }
   #the transformalizations to apply
   self$txlist<-txlist

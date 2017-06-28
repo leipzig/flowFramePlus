@@ -1,4 +1,4 @@
-#' This function performs biexponential transform on all parameters except SSC-W
+#' Member function performs biexponential transform on all parameters except SSC-W
 #'
 #' @importFrom flowCore colnames transform transformList linearTransform logTransform
 #' @param private this$private
@@ -11,7 +11,13 @@
 #'
 #' @keywords internal
 #'
-ffp_doTransform <- function (self,private,f,cols=c(1:5,7:13),method=c("biexp","log","linear"), fac=5.4/262143) {
+ffp_transformCols <- function (self,private,cols,method) {
+  self$ffTxed<-ffp_doTransform(f=self$ffTxed,cols=cols,method=method)
+}
+
+#' Static function to performs biexponential transform on all parameters except SSC-W
+#' This is verbatim what Wade was using originally
+ffp_doTransform <- function (f,cols=c(1:5,7:13),method=c("biexp","log","linear"), fac=5.4/262143) {
   if (is(f,"flowFrame")){
     method=match.arg(method)
     if(method=="biexp"){
