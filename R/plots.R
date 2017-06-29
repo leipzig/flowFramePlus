@@ -19,7 +19,7 @@ ffp_plot <- function(self, private, plist = self$plist, blueBackground=FALSE, sh
     suppressWarnings (flowCore::plot (self$ffTxed, plist, colramp=cr, nbin=nbin, band=bandwidth, nrpoints=nrpoints, axes=FALSE, ...))
   }
   else{
-    suppressWarnings(plot (exprs(self$ffTxed)[,plist[1]],exprs(self$ffTxed)[,plist[2]], pch=20, col=col,cex =.2,  axes=F,xlab=plist[1],ylab=plist[2], ...))
+    suppressWarnings(flowCore::plot (exprs(self$ffTxed)[,plist[1]],exprs(self$ffTxed)[,plist[2]], pch=20, col=col,cex =.2,  axes=F,xlab=plist[1],ylab=plist[2], ...))
     box()
   }
 
@@ -55,9 +55,21 @@ ffp_lookupPlotScale = function(self, private, ns){
 #'
 #' @keywords internal
 #'
-fsp_plot <- function(self, private, ...){
+fsp_plot_classic <- function(self, private, ...){
   par(mfrow = n2mfrow(length(self$frames)))
   for(f in self$frames){
     f$plot(...)
   }
+}
+
+#' Plot a flowSetPlus using flowviz xyplot
+#'
+#' @importFrom flowViz xyplot
+#' @param self this
+#' @param private this$private
+#'
+#' @keywords internal
+#'
+fsp_plot_flowviz <- function(self, private, ...){
+  flowViz::xyplot(self$plist[1] ~ self$plist[2], data = fsp$getFlowSet())
 }

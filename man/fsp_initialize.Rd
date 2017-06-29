@@ -4,7 +4,7 @@
 \alias{fsp_initialize}
 \title{Construct a flowSetPlus}
 \usage{
-fsp_initialize(self, private, ffs = NA, txlist = NA, plist = c("FSC-H",
+fsp_initialize(self, private, frames = NA, txlist = NA, plist = c("FSC-H",
   "SSC-H"))
 }
 \arguments{
@@ -12,11 +12,11 @@ fsp_initialize(self, private, ffs = NA, txlist = NA, plist = c("FSC-H",
 
 \item{private}{this$private}
 
+\item{frames}{flowFrame object(s) or FCS file path(s)}
+
 \item{txlist}{Which columns to transform and how}
 
 \item{plist}{Which columns to plot on the x and y axis by default (optional)}
-
-\item{ff}{flowFrame object(s) or FCS file path(s)}
 }
 \description{
 Construct a flowSetPlus

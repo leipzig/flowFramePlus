@@ -55,6 +55,7 @@ You can specify which columns to transform using the following syntax:
 \examples{
 ffp<-flowFramePlus$new("/projects/AML/data/AML/AML 1/AML 1 De Novo Panel_Tube_001.fcs")
 ffp$plot()
-fsp<-flowSetPlus$new("/projects/AML/data/AML/AML 1/AML 1 De Novo Panel_Tube_001.fcs")
-#fsp$plot()
+files<-dir(path="/projects/AML/data/AML/",pattern = "*.fcs",recursive = TRUE,include.dirs = TRUE,full.names = TRUE)
+fsp<-flowSetPlus$new(files)
+fsp$plot(plist=c("FSC-A","Horizon V500-A"))
 }

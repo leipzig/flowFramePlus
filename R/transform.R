@@ -20,6 +20,11 @@ ffp_transformCols <- function (self,private,cols,method) {
 ffp_doTransform <- function (f,cols=c(1:5,7:13),method=c("biexp","log","linear"), fac=5.4/262143) {
   if (is(f,"flowFrame")){
     method=match.arg(method)
+    if(method=="boxcox"){
+      bx <- boxcoxTransform(jitter=F)
+      bxlist <- transformList (colnames(f)[cols], bx)
+      return(transform (f, bxlist))
+    }
     if(method=="biexp"){
       bx <- biexpTransform(jitter=F)
       bxlist <- transformList (colnames(f)[cols], bx)
@@ -39,6 +44,11 @@ ffp_doTransform <- function (f,cols=c(1:5,7:13),method=c("biexp","log","linear")
   else if (is(f,"flowSet")){
     for(i in 1:length(f)){
       method=match.arg(method)
+      if(method=="boxcox"){
+        bx <- biexpTransform(jitter=F)
+        bxlist <- transformList (colnames(f[[i]])[cols], bx)
+        f[[i]] = (transform (f[[i]], bxlist))
+      }
       if(method=="biexp"){
         bx <- biexpTransform(jitter=F)
         bxlist <- transformList (colnames(f[[i]])[cols], bx)

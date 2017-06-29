@@ -34,10 +34,17 @@ NULL
 flowSetPlus <- R6Class("flowSetPlus",
                        public = list(
                          frames = NULL,
+                         getFlowSet = function(...)
+                           fsp_get_flowset(self, private),
                          initialize = function(...)
                            fsp_initialize(self, private, ...),
-                         plot = function(...)
-                           fsp_plot(self, private, ...)
+                         plot = function(type,...){
+                           if(tolower(type)=='flowviz'){
+                              fsp_plot_flowviz(self, private, ...)
+                           }else{
+                              fsp_plot_classic(self,private...)
+                           }
+                         }
                 )
 )
 
@@ -46,7 +53,7 @@ flowSetPlus <- R6Class("flowSetPlus",
 #' @importFrom assertthat assert_that are_equal
 #' @param self this
 #' @param private this$private
-#' @param ff flowFrame object(s) or FCS file path(s)
+#' @param frames flowFrame object(s) or FCS file path(s)
 #' @param txlist Which columns to transform and how
 #' @param plist Which columns to plot on the x and y axis by default (optional)
 #'
@@ -54,15 +61,26 @@ flowSetPlus <- R6Class("flowSetPlus",
 #'
 fsp_initialize = function(self,
                           private,
-                          ffs = NA,
+                          frames = NA,
                           txlist = NA,
                           plist = c("FSC-H", "SSC-H")) {
-  if (length(ffs) > 1) {
+  if (length(frames) > 1) {
     self$frames <-
-      as.list(sapply(ffs, function(ff) {
+      as.list(sapply(frames, function(ff) {
         flowFramePlus$new(ff, txlist, plist)
       }))
   } else{
-    self$frames <- list(flowFramePlus$new(ff, txlist, plist))
+    self$frames <- list(flowFramePlus$new(frames, txlist, plist))
   }
+  self$txlist<-txlist
+  self$plist<-plist
+}
+
+#' Cast a flowSetPlus as a flowSet
+#'
+#' @keywords internal
+#'
+fsp_get_flowset = function(self,
+                           private){
+  as(lapply(self$frames,function(x){x$ffTxed}),"flowSet")
 }
