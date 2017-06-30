@@ -50,8 +50,13 @@ flowFramePlus <- R6Class("flowFramePlus",
                            plotScales = NULL,
                            initialize = function(...)
                              ffp_initialize(self, private, ...),
-                           plot = function(...)
-                             ffp_plot(self, private, ...),
+                           plot = function(type,...){
+                             if(tolower(type)=='flowviz'){
+                               ffp_plot_flowviz(self, private, ...)
+                             }else{
+                               ffp_plot_classic(self,private...)
+                             }
+                           },
                            lookupPlotScale = function(...)
                              ffp_lookupPlotScale(self, private, ...),
                            transformCols = function(...)
