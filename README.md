@@ -18,6 +18,8 @@ docker push 205853417430.dkr.ecr.us-east-1.amazonaws.com/cytovas-ffp:latest
 aws ecr get-login --no-include-email --region us-east-1
 ```
 (run this login command)
+
+To add local mounts to docker ()
 ```
 docker run -it -v /projects:/projects 205853417430.dkr.ecr.us-east-1.amazonaws.com/cytovas-ffp /usr/local/lib/R/bin/R 
 ```

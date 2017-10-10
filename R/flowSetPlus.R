@@ -34,6 +34,8 @@ NULL
 flowSetPlus <- R6Class("flowSetPlus",
                        public = list(
                          frames = NULL,
+                         txlist=NULL,
+                         plist=NULL,
                          getFlowSet = function(...)
                            fsp_get_flowset(self, private),
                          initialize = function(...)
@@ -64,6 +66,8 @@ fsp_initialize = function(self,
                           frames = NA,
                           txlist = NA,
                           plist = c("FSC-H", "SSC-H")) {
+  self$txlist<-txlist
+  self$plist<-plist
   if (length(frames) > 1) {
     self$frames <-
       as.list(sapply(frames, function(ff) {
@@ -72,8 +76,6 @@ fsp_initialize = function(self,
   } else{
     self$frames <- list(flowFramePlus$new(frames, txlist, plist))
   }
-  self$txlist<-txlist
-  self$plist<-plist
 }
 
 #' Cast a flowSetPlus as a flowSet
