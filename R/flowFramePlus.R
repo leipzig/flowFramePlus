@@ -50,7 +50,7 @@ flowFramePlus <- R6Class("flowFramePlus",
                            plotScales = NULL,
                            initialize = function(...)
                              ffp_initialize(self, private, ...),
-                           plot = function(type,...){
+                           plot = function(type='classic',...){
                              if(tolower(type)=='flowviz'){
                                ffp_plot_flowviz(self, private, ...)
                              }else{
