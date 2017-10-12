@@ -54,7 +54,7 @@ flowFramePlus <- R6Class("flowFramePlus",
                              if(tolower(type)=='flowviz'){
                                ffp_plot_flowviz(self, private, ...)
                              }else{
-                               ffp_plot_classic(self,private...)
+                               ffp_plot_classic(self,private, ...)
                              }
                            },
                            lookupPlotScale = function(...)

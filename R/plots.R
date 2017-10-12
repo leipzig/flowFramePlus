@@ -52,13 +52,23 @@ ffp_lookupPlotScale = function(self, private, ns){
 #' @param plist Which columns to plot on the x and y axes, can override settings made at class instantiation
 #' @param tx Scale to apply to x axis
 #' @param ty Scale to apply to y axis
+#' @param main Plot titles
 #'
 #' @keywords internal
 #'
-fsp_plot_classic <- function(self, private, ...){
+fsp_plot_classic <- function(self, private, main=NULL, ...){
   par(mfrow = n2mfrow(length(self$frames)))
-  for(f in self$frames){
-    f$plot(...)
+  if(length(main>1)){
+    # labels for each plot
+    for(fnum in 1:length(self$frames)){
+      f<-self$frames[[fnum]]
+      m<-main[fnum]
+      f$plot(main=m)
+    }
+  }else{
+    for(f in self$frames){
+      f$plot(...)
+    }
   }
 }
 

@@ -44,7 +44,7 @@ flowSetPlus <- R6Class("flowSetPlus",
                            if(tolower(type)=='flowviz'){
                               fsp_plot_flowviz(self, private, ...)
                            }else{
-                              fsp_plot_classic(self,private...)
+                              fsp_plot_classic(self,private, ...)
                            }
                          }
                 )

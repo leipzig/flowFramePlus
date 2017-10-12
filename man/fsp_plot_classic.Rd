@@ -4,12 +4,14 @@
 \alias{fsp_plot_classic}
 \title{Plot a flowSetPlus use base R (pplot)}
 \usage{
-fsp_plot_classic(self, private, ...)
+fsp_plot_classic(self, private, main = NULL, ...)
 }
 \arguments{
 \item{self}{this}
 
 \item{private}{this$private}
+
+\item{main}{Plot titles}
 
 \item{plist}{Which columns to plot on the x and y axes, can override settings made at class instantiation}
 
